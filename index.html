@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Prototype techniques</title>
+	<link href="https://fonts.googleapis.com/css2?family=Sen:wght@400;700;800&display=swap" rel="stylesheet">
+	<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+	<script src="https://d3js.org/d3.v5.min.js"></script>
+	<script src="https://unpkg.com/intersection-observer"></script>
+	<script src="https://unpkg.com/scrollama"></script>
+</head>
+<style type="text/css">
+	body, html {
+		top:0;
+		left:0;
+		margin:0;
+		font-family:'Helvetica Neue', sans-serif;
+	}
+	nav	{
+		background-color:white;
+		position:fixed;
+		width:100%;
+		display:flex;
+		justify-content: center;
+		align-items:center;
+		border-bottom:0.05em solid black;
+	}
+	.title {
+		height:50vh;
+		color:white;
+		background-color:black;
+/*		background-image:url('https://i.pinimg.com/originals/7f/43/1c/7f431c9e6991b1a83d79e359dc09c99d.gif');*/
+		background-repeat: no-repeat;
+		background-attachment: fixed;
+		background-position: left top;
+		background-size: auto 100%;
+	}
+	.title h1 {
+		font-size:5em;
+	}
+	.title h2 {
+		font-size:1em;
+		font-weight:400;
+	}
+	.header {
+		text-align:center;
+		display:flex;
+		justify-content:center;
+		align-items:center;
+		border:0.5em solid black;
+		padding:5% 0%;
+		animation: fadeIn 0.5s ease-in-out;
+	}
+	.header h1{
+		font-family:'Helvetica Neue', sans-serif;
+		font-weight:800;
+		margin:0;
+	}
+	.header h2 {
+		margin:0;
+	}
+	.sticky {
+		float:right;
+		top:25%;
+		position:sticky;
+		width:50%;
+		display:inline-flex;
+					background-color:white;
+	}
+	.leftside{
+		background-color:black;
+		color:white;
+		width: 30%;
+    	padding: 5% 10% 5% 5%;
+	}
+	.progressive{
+		width:100%;
+		display:block;
+		margin-bottom:100%!important;
+	}
+	.end {
+		margin-bottom:5%!important;
+	}
+	#counter {
+		width:100%;
+		font-size:10em;
+		text-align:center;
+		margin:0;
+		padding:0%;
+		line-height:1em;
+		font-weight: 800;
+    	letter-spacing: -0.05em;
+	}
+	#counter h2{
+		text-align:center;
+	}
+	.text {
+		margin:5%;
+		line-height:2em;
+		opacity:0;
+		margin-top:10%;
+		transition:0.5s ease-in-out;
+	}
+	.text h1 {
+		font-size:4em;
+		letter-spacing:-0.05em;
+		line-height:1em;
+		font-weight:900;
+		width:60%;
+	}
+	.text h2 {
+		font-weight:400;
+		font-size:1em;
+		font-style:italic;
+	}
+	.sticky h1 {
+		width:100%;
+		font-size:3em;
+	}
+	.sticky h2 {
+		font-size:0.8em;
+		text-transform:uppercase;
+		letter-spacing:0.1em;
+	}
+	.center_aligner {
+		overflow:none;
+		width:100%;
+		display:flex;
+		align-items:center;
+		justify-content:center;
+		margin:2% 0%;
+	}
+	iframe {
+		border:0.5em solid black;
+		width:900px;
+		height:500px;
+	}
+	.tableauPlaceholder{
+		width:50%;
+	}
+	img{
+		text-align:center;
+		margin:10%;
+		display:inline-block;
+		border:0.5em solid black;
+	}
+	.caption {
+		font-size:0.8em;
+		color:#666666;
+	}
+	.large {
+		width:100%;
+	}
+	.large {
+		width:80%;
+		display:block;
+	}
+	@keyframes fadeIn {
+		0%{
+			opacity:0;
+		}
+		100%{
+			opacity:1;
+		}
+	}
+	@media screen and (max-width:767px){
+		.sticky {
+	/*		bottom:0;*/
+			width:50%;
+			float:none;
+			margin:auto;
+			display:flex;
+			line-height:2em;
+		}
+		.sticky h1 {
+			font-size:2em;
+			line-height:2em;
+		}
+		.sticky h2 {
+			font-size:0.5em;
+		}
+		#counter {
+			font-size:5em;
+		}
+		.leftside {
+			width: 85%;
+    		padding: 5% 10% 5% 5%;
+		}
+		.small {
+			width:80%;
+		}
+		.title {
+			height:80vh;
+		}
+		.text h1 {
+			font-size:2.5em;
+			width:80%;
+		}
+		.text {
+			margin:10% 5%;
+		}
+		iframe {
+			height:300px;
+		}
+
+	}
+</style>
+<body>
+
+<!-- nav -->
+<nav>
+	<h3>Top Spotify Songs from 2017-2019</h3>
+</nav>
+
+<!-- text -->
+<div class='header title step'>
+	<div class='aligner'>
+		<h1>Spotify Wrapped</h1>
+		<h2>Analysis on the Top 50 Most-Streamed Songs & the Rise of Latin Music</h2>	
+	</div>
+</div>
+
+
+<div class='text'>
+	<h2>Lauren Neman</h2>	
+	At the end of each year, Spotify releases personal Wrapped cards, or individualized playlists of each user's most-streamed songs. But what were the top songs and genres of each year? Data collection of the Spotify top 50 songs from 2017, 2018, and 2019 gives us a glimpse into how popular music is evolving. I hypothesized a steady rise in "Latin" music because its rhythmic beats and catchy upbeat vibe appeals to people of all ages and backgrounds. It no longer matters if the lyrics are in English, Spanish or both.
+</div>
+
+<div class='text'>
+	<h1>How were the top 50 highest-streamed songs analyzed?</h1>
+	The data was analyzed based upon each song's genre, BPM, energy, loudness, danceability, valence, acousticness, and year it made the top 50.
+</div>
+
+<!-- image 1 -->
+<div class='center_aligner'>
+	<!-- change line 120 if you want to change the size of the image -->
+	<img class='large' src="images/acoustic-amplifier-artist-audio-114820.jpg"> 	
+</div>
+<!-- caption for image 1 -->
+<div class='center_aligner'>
+	<div class='caption'></div>	
+</div>
+
+
+<div class='text'>
+	<h1>16% of Spotify's top 50 songs from the past three years are by latin artists.</h1>
+	This includes but is not limited to reggaeton, latin-pop, latin-dance, and urban latin music.
+</div>
+
+
+<!-- image 1 -->
+<div class='center_aligner'>
+	<!-- change line 120 if you want to change the size of the image -->
+	<img class='large' src="images/Genre copy.jpg"> 	
+</div>
+<!-- caption for image 1 -->
+<div class='center_aligner'>
+	<div class='caption'></div>	
+</div>
+
+
+<div class='text'>
+	<h1>How did the popularity of each genre change?</h1>
+	While most genres fluctuated, Latin and Rap are the only two that saw its popularity double throughout 2017, 2018, and 2019.
+</div>
+
+<!-- image 1 -->
+<div class='center_aligner'>
+	<!-- change line 120 if you want to change the size of the image -->
+	<img class='large' src="images/Genre Bar copy.jpg"> 	
+</div>
+<!-- caption for image 1 -->
+<div class='center_aligner'>
+	<div class='caption'></div>	
+</div>
+
+<div class='text'>
+	<h1>What is valence and how does it affect a song's popularity?</h1>
+	A song's valence is arguably its most important variable in measuring its popularity. This can be explained by the fact that a top-charting song is inherently popular because it creates a sense of familiarity for listeners. Therefore, when they find audible consitency throughout the genre, the familarity of it makes them more inclined to ease into a piece of music.
+
+	Spotify measures a song' valence as a measure from 0 to 100 describing the musical positiveness conveyed by a track. Tracks with high valence sound more positive (e.g. happy, cheerful, euphoric), while tracks with low valence sound more negative (e.g. sad, depressed, angry). 
+
+	The data concludes that in fact, valence does not directly affect a song's popularity within the Spotify Top 50. This is demonstrated by the number 24 song in 2017, "There's Nothing Holdin' Me Back" by Shawn Mendes, which has the highest valence of 97. 
+</div>
+
+<!-- image 1 -->
+<div class='center_aligner'>
+	<!-- change line 120 if you want to change the size of the image -->
+	<img class='large' src="images/Valence copy.jpg"> 	
+</div>
+<!-- caption for image 1 -->
+<div class='center_aligner'>
+	<div class='caption'></div>	
+</div>
+
+
+<div class='text'>
+	<h1>Takeaways</h1>
+	In 2019, latin music's presence on the Spotify Top 50 doubled from what it was in 2017. Additionally, its influence on modern pop became wildly poular through artists like Cardi B and Camila Cabello as well as Justin Bieber's remix of Despacito in 2017. I expect to see latin music become incresingly popular around the world in 2020. 
+</div>
+
+<!-- image 3 -->
+<div class='center_aligner'>
+	<img class='large' src="images/What the world listened to copy.jpg"> 	
+</div>
+
+</body>
+<script type="text/javascript">
+
+// instantiate the scrollama
+const scroller = scrollama();
+const scroller2 = scrollama();
+
+scroller
+  .setup({
+    step: ".text",
+    offset: 0.9,
+  })
+  .onStepEnter(response => {
+    // { element, index, direction }
+    el=response.element;
+    el.style.opacity=1;
+    el.style.marginTop='5%';    
+  })
+  .onStepExit(response => {
+    // { element, index, direction }  
+    el=response.element;
+  })
+  ;
+ // setup resize event
+window.addEventListener("resize", scroller.resize);
+
+scroller2
+  .setup({
+    step: ".progressive",
+    offset: 0.6,
+  })
+  .onStepEnter(response => {
+    // { element, index, direction }
+    el=response.element;
+    el.style.opacity=1;
+    if(response.index==0 || 1 || 2){
+    	stick('dynamic_sticky1')
+    	response.direction=='down'
+    	if(response.index==0){
+    		count(1,16,1,'Energy','after a 15 minute break','dynamic_sticky1')
+    	} else if (response.index==1){
+    		count(1,3.8,.1,'Engagement','average','dynamic_sticky1')
+    	} else if (response.index==2){
+    		count(0,0.9,.1,'Mood','increase','dynamic_sticky1')
+    	}
+    }
+  })
+  .onStepExit(response => {
+    // { element, index, direction }  
+    el=response.element;
+    console.log(response.index)
+    if(response.index==2){
+    	unstick('dynamic_sticky1')
+    }
+    el.style.opacity=0;
+  })
+  ;
+ // setup resize event
+window.addEventListener("resize", scroller2.resize);
+
+function count(number1, number2, step, title, label, location_id, prefix='+', suffix='%'){
+	target = document.querySelector('#'+location_id)
+	console.log(target)
+	let text=number1;
+
+	setInterval(function(){
+		if(text!=number2){
+			num = text+step
+			if(num % 1 == 0){
+				text = num
+			} else {
+				text = parseFloat(num.toFixed(2))
+			}
+			target.innerHTML="<div class='aligner'><h1>"+title+"</h1><div id='counter'>"+prefix+text+suffix+"</div><h2>"+label+"</h2></div>"
+		}
+	}, 30);
+}
+
+function stick(location_id){
+	target = document.querySelector('#'+location_id)
+	target.style.position="sticky"
+}
+
+function unstick(location_id){
+	target = document.querySelector('#'+location_id)
+	target.style.position="relative"
+}
+
+</script>
+
+</html>
